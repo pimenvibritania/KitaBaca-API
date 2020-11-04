@@ -15,6 +15,7 @@ func Init() *echo.Echo {
 	})
 
 	e.GET("/posts", controllers.FetchAllPost)
+	e.POST("/posts", controllers.StorePost)
 
 	return e
 }

@@ -43,3 +43,37 @@ func FetchAllPost() (Response, error) {
 
 	return res, nil
 }
+
+func StorePost(title string, description string) (Response, error) {
+
+	var res Response
+
+	con := db.CreateCon()
+
+	sqlStatement := "INSERT INTO post VALUES (DEFAULT,$1,$2) RETURNING id" //returning id , mengembalikan nilai id terakhir di eksekusi
+
+	smst, err := con.Prepare(sqlStatement)
+
+	if err != nil {
+		return res, err
+	}
+
+	// menampung id terakhir dari query eksekusi
+	var id int64
+
+	// eksekusi query dan (Scan) mengambil response return id dari pgsql
+	err = smst.QueryRow(title, description).Scan(&id)
+
+	if err != nil {
+		return res, err
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Success"
+	res.Data = map[string]int64{
+		"last_inserted_id": id,
+	}
+
+	return res, nil
+
+}

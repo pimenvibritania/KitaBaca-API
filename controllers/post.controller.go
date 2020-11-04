@@ -15,3 +15,15 @@ func FetchAllPost(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func StorePost(c echo.Context) error {
+	title := c.FormValue("title")
+	description := c.FormValue("description")
+
+	result, err := models.StorePost(title, description)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
